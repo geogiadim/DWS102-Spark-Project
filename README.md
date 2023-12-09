@@ -14,12 +14,15 @@ docker-compose up
 ```
 
 Available environment variables:
-- SPARK_MASTER_WEBUI_PORT: Port for the master web UI (default: 8080).
-- SPARK_MASTER_WEBUI_EXPOSED_PORT: The port to which the Spark Master's web UI listens when accessed from a browser. 
-- SPARK_WORKER_WEBUI_PORT: Port for the worker web UI (default: 8081).
-- SPARK_WORKER_MEMORY: Total amount of memory to allow Spark worker to use on the machine, e.g. 1g, 512m, 256m.
-- SPARK_WORKER_CORES: Total number of (CPU) cores to allow Spark worker to use on the machine.
-- NUM_OF_WORKERS: Total number of created workers connected to the spark-master of the Apache Spark cluster. 
+| Variable Name                  | Description                                                                                             | Default Value |
+|---------------------------------|---------------------------------------------------------------------------------------------------------|---------------|
+| SPARK_MASTER_WEBUI_PORT         | Port for the master web UI                                                                             | 8080          |
+| SPARK_MASTER_WEBUI_EXPOSED_PORT  | The port to which the Spark Master's web UI listens when accessed from a browser                        | -             |
+| SPARK_WORKER_WEBUI_PORT         | Port for the worker web UI                                                                             | 8081          |
+| SPARK_WORKER_MEMORY              | Total amount of memory to allow Spark worker to use on the machine, e.g. 1g, 512m, 256m                  | -             |
+| SPARK_WORKER_CORES               | Total number of (CPU) cores to allow Spark worker to use on the machine                                 | -             |
+| NUM_OF_WORKERS                  | Total number of created workers connected to the spark-master of the Apache Spark cluster                | -             |
+
 
 ### Spark Shell 
 To access Spark Shell inside the spark container run:
