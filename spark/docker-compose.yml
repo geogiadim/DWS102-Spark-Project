@@ -4,28 +4,34 @@ services:
     spark-master:
         image: docker.io/bitnami/spark:3.5
         container_name: spark-master
+        env_file:
+            - ".env"
         environment:
             - SPARK_MODE=master
-            - SPARK_MASTER_WEBUI_PORT=8080
+            - SPARK_MASTER_WEBUI_PORT=${SPARK_MASTER_WEBUI_PORT}
             - SPARK_RPC_AUTHENTICATION_ENABLED=no
             - SPARK_RPC_ENCRYPTION_ENABLED=no
             - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
             - SPARK_SSL_ENABLED=no
             - SPARK_USER=spark
         ports:
-            - "9090:8080"
+            - "${SPARK_MASTER_WEBUI_EXPOSED_PORT}:${SPARK_MASTER_WEBUI_PORT}"
+
     spark-worker:
         image: docker.io/bitnami/spark:3.5
         depends_on:
             - spark-master
+        env_file:
+            - ".env"
         environment:
             - SPARK_MODE=worker
-            - SPARK_WORKER_WEBUI_PORT=8081
+            - SPARK_WORKER_WEBUI_PORT=${SPARK_WORKER_WEBUI_PORT}
             - SPARK_MASTER_URL=spark://spark-master:7077 
-            - SPARK_WORKER_MEMORY=512m
-            - SPARK_WORKER_CORES=1
+            - SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY}
+            - SPARK_WORKER_CORES=${SPARK_WORKER_CORES}
             - SPARK_RPC_AUTHENTICATION_ENABLED=no
             - SPARK_RPC_ENCRYPTION_ENABLED=no
             - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
             - SPARK_SSL_ENABLED=no
             - SPARK_USER=spark
+        scale: ${NUM_OF_WORKERS}
