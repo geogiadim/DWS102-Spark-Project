@@ -13,15 +13,12 @@ files = {
 
 fig = plt.figure(figsize=(12, 12))
 
-# Generating a 3D subplot for each dataset
 for i, (label, file_path) in enumerate(files.items(), start=1):
     ax = fig.add_subplot(2, 2, i, projection='3d')
 
-    # Read data from the file
     df = pd.read_csv(file_path, sep="\t", header=None)
     df.columns = ['X', 'Y', 'Z']
 
-    # 3D Plotting
     ax.scatter(df['X'], df['Y'], df['Z'], marker='o')
     ax.set_title(label.replace('_', ' ').title())
     ax.set_xlabel('X axis')
