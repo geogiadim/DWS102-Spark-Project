@@ -22,7 +22,8 @@ services:
         networks:
             - spark-network
         volumes:
-            - ${LOCAL_PATH_TO_DATASET}:/opt/bitnami/spark/datafiles
+            # - ${LOCAL_PATH_TO_DATASET}:/opt/bitnami/spark/data/datafiles
+            - spark-datafiles:/opt/bitnami/spark/data/datafiles
 
     spark-worker:
         image: docker.io/bitnami/spark:3.5
@@ -45,4 +46,14 @@ services:
             - spark-network
         scale: ${NUM_OF_WORKERS}
         volumes:
-            - ${LOCAL_PATH_TO_DATASET}:/opt/bitnami/spark/datafiles
+            # - ${LOCAL_PATH_TO_DATASET}:/opt/bitnami/spark/data/datafiles
+            - spark-datafiles:/opt/bitnami/spark/data/datafiles
+
+volumes:
+  spark-datafiles:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${LOCAL_PATH_TO_DATASET}
+      o: bind
+
