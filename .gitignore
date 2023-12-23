@@ -1,1 +1,7 @@
 .env
+/hadoop
+spark-jars
+venv
+target
+.idea
+.bsp

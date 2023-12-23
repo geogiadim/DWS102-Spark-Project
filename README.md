@@ -1,9 +1,9 @@
 # DWS102-Spark-Project
 Spark project for DWS MSc Program's course named "Technologies for Big Data Analytics" (DWS102).
 
-
-## Spark Deployment
-Based on https://hub.docker.com/r/bitnami/spark#environment-variables
+---
+## Spark Docker Deployment
+Based on https://hub.docker.com/r/bitnami/spark
 
 Make sure you have `docker` and `docker-compose` installed before following the instructions.
 The project is using an .env file to read enviroment variables so make sure to configure it before getting started. 
@@ -39,6 +39,45 @@ spark-shell
 docker-compose logs -f spark-master
 ```
 
+### WebUI for Spark Jobs/Executors
+http://localhost:4040/
+
+
+---
 ## Scala Project
 
 A mini documentation for scala project.
+
+
+### Install Scala with cs setup
+https://www.scala-lang.org/download/
+
+
+### Build JAR file 
+Run the following command inside scala-project director
+
+```sh
+sbt clean assembly
+```
+
+You will find the generated JAR file in ```scala-project/target/scala-2.12/```
+
+
+### Instructions to run the JAR file inside the saprk container
+
+1. Copy datafiles to spark container
+    ```sh
+    docker cp /your_local_path_to_/datasets spark-master:/opt/bitnami/spark/datafiles
+    ```
+
+    Skip this step if you have already mount the dataset direcotry inside docker container
+
+3. Copy JAR file inside container
+    ```sh
+    docker cp target/scala-2.12/WordCount.jar spark-master:/opt/bitnami/spark
+    ```
+
+4. Spark Submit inside container
+    ```sh
+    spark-submit --master spark://spark-master:7077 WordCount.jar <input_file_path_if_needed>
+    ```
