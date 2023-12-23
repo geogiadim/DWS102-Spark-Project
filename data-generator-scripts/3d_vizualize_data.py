@@ -3,11 +3,12 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
+path_3d = "datasets/3d/1k-points/"
 files = {
-    'correlated_data': 'datasets/3d_correlated_data.txt',
-    'uniform_data': 'datasets/3d_uniform_data.txt',
-    'normal_data': 'datasets/3d_normal_data.txt',
-    'anticorrelated_data': 'datasets/3d_anticorrelated_data.txt',
+    'correlated_data': path_3d + '3d_correlated_data.txt',
+    'uniform_data': path_3d + '3d_uniform_data.txt',
+    'normal_data': path_3d + '3d_normal_data.txt',
+    'anticorrelated_data': path_3d + '3d_anticorrelated_data.txt',
 }
 
 

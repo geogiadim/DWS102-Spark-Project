@@ -30,29 +30,33 @@ class DataGenerator:
         df = pd.DataFrame(data)
         df.to_csv(filename, sep='\t', index=False, header=False)
 
+
+number_of_points = 1000
 # 2d data
-generator = DataGenerator(2, "normal", 1000)
-generator.export_data('datasets/normal_data.txt')
+path_2d = "datasets/2d/1k-points"
+generator = DataGenerator(2, "normal", number_of_points)
+generator.export_data(path_2d + 'normal_data.txt')
 
-generator = DataGenerator(2, "correlated", 1000)
-generator.export_data('datasets/correlated_data.txt')
+generator = DataGenerator(2, "correlated", number_of_points)
+generator.export_data(path_2d + 'correlated_data.txt')
 
-generator = DataGenerator(2, "anticorrelated", 1000)
-generator.export_data('datasets/anticorrelated_data.txt')
+generator = DataGenerator(2, "anticorrelated", number_of_points)
+generator.export_data(path_2d + 'anticorrelated_data.txt')
 
-generator = DataGenerator(2, "uniform", 1000)
-generator.export_data('datasets/uniform_data.txt')
+generator = DataGenerator(2, "uniform", number_of_points)
+generator.export_data(path_2d + 'uniform_data.txt')
 
 
 # 3d data
-generator = DataGenerator(3, "normal", 1000)
-generator.export_data('datasets/3d_normal_data.txt')
+path_3d = "datasets/3d/1k-points"
+generator = DataGenerator(3, "normal", number_of_points)
+generator.export_data(path_3d + '3d_normal_data.txt')
 
-generator = DataGenerator(3, "correlated", 1000)
-generator.export_data('datasets/3d_correlated_data.txt')
+generator = DataGenerator(3, "correlated", number_of_points)
+generator.export_data(path_3d + '3d_correlated_data.txt')
 
-generator = DataGenerator(3, "anticorrelated", 1000)
-generator.export_data('datasets/3d_anticorrelated_data.txt')
+generator = DataGenerator(3, "anticorrelated", number_of_points)
+generator.export_data(path_3d + '3d_anticorrelated_data.txt')
 
-generator = DataGenerator(3, "uniform", 1000)
-generator.export_data('datasets/3d_uniform_data.txt')
+generator = DataGenerator(3, "uniform", number_of_points)
+generator.export_data(path_3d + '3d_uniform_data.txt')

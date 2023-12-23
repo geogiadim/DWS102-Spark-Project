@@ -22,8 +22,8 @@ services:
         networks:
             - spark-network
         volumes:
-            # - ${LOCAL_PATH_TO_DATASET}:/opt/bitnami/spark/data/datafiles
             - spark-datafiles:/opt/bitnami/spark/data/datafiles
+            # - ${LOCAL_PATH_TO_APP}:/opt/bitnami/spark/app
 
     spark-worker:
         image: docker.io/bitnami/spark:3.5
@@ -46,8 +46,16 @@ services:
             - spark-network
         scale: ${NUM_OF_WORKERS}
         volumes:
-            # - ${LOCAL_PATH_TO_DATASET}:/opt/bitnami/spark/data/datafiles
             - spark-datafiles:/opt/bitnami/spark/data/datafiles
+
+    # sbt:
+    #     image: hseeberger/scala-sbt:8u252_1.3.10_2.13.2
+    #     container_name: sbt-container
+    #     working_dir: /opt/bitnami/spark/app  # Set the working directory to your Spark app
+    #     volumes:
+    #         - ${LOCAL_PATH_TO_APP}:/opt/bitnami/spark/app
+    #     command: sbt run
+
 
 volumes:
   spark-datafiles:

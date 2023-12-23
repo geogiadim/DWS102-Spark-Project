@@ -1,11 +1,13 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
+path_2d = "datasets/2d/1k-points"
 files = {
-    'correlated_data': 'datasets/correlated_data.txt',
-    'uniform_data': 'datasets/uniform_data.txt',
-    'normal_data': 'datasets/normal_data.txt',
-    'anticorrelated_data': 'datasets/anticorrelated_data.txt',
+    'correlated_data': path_2d + 'correlated_data.txt',
+    'uniform_data': path_2d + 'uniform_data.txt',
+    'normal_data': path_2d + 'normal_data.txt',
+    'anticorrelated_data': path_2d + 'anticorrelated_data.txt',
 }
 
 fig, axs = plt.subplots(2, 2, figsize=(12, 12))
