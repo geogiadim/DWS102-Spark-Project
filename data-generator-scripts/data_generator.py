@@ -9,17 +9,18 @@ class DataGenerator:
 
     def generate_data(self):
         if self.distribution == "uniform":
-            data = np.random.uniform(0, 1, (self.number_of_points, self.number_of_dimensions))
+            data = np.random.uniform(0.05, 1, (self.number_of_points, self.number_of_dimensions))
         elif self.distribution == "normal":
-            data = np.clip(np.random.normal(0.5, 0.15, (self.number_of_points, self.number_of_dimensions)), 0, 1)
+            data = np.clip(np.random.normal(0.5, 0.15, (self.number_of_points, self.number_of_dimensions)), 0.1, 1)
         elif self.distribution == "correlated":
-            base = np.linspace(0, 1, self.number_of_points)
+            base = np.linspace(0.05, 1, self.number_of_points)
             data = np.array([base + np.random.normal(0, 0.05, self.number_of_points) for _ in range(self.number_of_dimensions)]).T
-            data = np.clip(data, 0, 1)
+            data = np.clip(data, 0.05, 1)
         elif self.distribution == "anticorrelated":
-            base = np.linspace(0, 1, self.number_of_points)
-            data = np.array([base if i % 2 == 0 else 1 - base + np.random.normal(0, 0.05, self.number_of_points) for i in range(self.number_of_dimensions)]).T
-            data = np.clip(data, 0, 1)
+            # only one dimension is anticorrelated to all others
+            base = np.linspace(0.05, 1, self.number_of_points)
+            data = np.array([base if i == 0 else 1 - base + np.random.normal(0, 0.05, self.number_of_points) for i in range(self.number_of_dimensions)]).T
+            data = np.clip(data, 0.05, 1)
         else:
             raise ValueError("Unsupported distribution type")
 
@@ -56,3 +57,16 @@ generator.export_data('datasets/3d_anticorrelated_data.txt')
 
 generator = DataGenerator(3, "uniform", 1000)
 generator.export_data('datasets/3d_uniform_data.txt')
+
+# 4d data
+generator = DataGenerator(4, "normal", 1000)
+generator.export_data('datasets/4d_normal_data.txt')
+
+generator = DataGenerator(4, "correlated", 1000)
+generator.export_data('datasets/4d_correlated_data.txt')
+
+generator = DataGenerator(4, "anticorrelated", 1000)
+generator.export_data('datasets/4d_anticorrelated_data.txt')
+
+generator = DataGenerator(4, "uniform", 1000)
+generator.export_data('datasets/4d_uniform_data.txt')
