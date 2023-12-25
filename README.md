@@ -81,3 +81,11 @@ You will find the generated JAR file in ```scala-project/target/scala-2.12/```
     ```sh
     spark-submit --master spark://spark-master:7077 WordCount.jar <input_file_path_if_needed>
     ```
+
+
+!!!Notes
+start-master.sh --properties-file /conf/spark-custom.conf
+ps aux | grep spark
+start-master.sh
+start-worker.sh spark://localhost:7077
+spark-submit --class WordCount --master spark://localhost:7077 ~./target/scala-2.12/WordCount.jar
