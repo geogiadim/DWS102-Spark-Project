@@ -70,3 +70,30 @@ generator.export_data('datasets/4d_anticorrelated_data.txt')
 
 generator = DataGenerator(4, "uniform", 1000)
 generator.export_data('datasets/4d_uniform_data.txt')
+
+# 4d data big data
+generator = DataGenerator(4, "normal", 10000)
+generator.export_data('datasets/4d_normal_data_10k.txt')
+
+generator = DataGenerator(4, "correlated", 10000)
+generator.export_data('datasets/4d_correlated_data_10k.txt')
+
+generator = DataGenerator(4, "anticorrelated", 10000)
+generator.export_data('datasets/4d_anticorrelated_data_10k.txt')
+
+generator = DataGenerator(4, "uniform", 10000)
+generator.export_data('datasets/4d_uniform_data_10k.txt')
+
+
+# 4d data big data
+generator = DataGenerator(4, "normal", 1000000)
+generator.export_data('datasets/4d_normal_data_1m.txt')
+
+generator = DataGenerator(4, "correlated", 1000000)
+generator.export_data('datasets/4d_correlated_data_1m.txt')
+
+generator = DataGenerator(4, "anticorrelated", 1000000)
+generator.export_data('datasets/4d_anticorrelated_data_1m.txt')
+
+generator = DataGenerator(4, "uniform", 1000000)
+generator.export_data('datasets/4d_uniform_data_1m.txt')

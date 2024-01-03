@@ -2,7 +2,7 @@ import org.apache.spark.sql.SparkSession
 
 object SkylineMain {
   def main(args: Array[String]): Unit = {
-    val inputFile = "file:///home/ggian/Documents/00.code/DWS102-Spark-Project/datasets/4d_uniform_data.txt" // it will read it from args
+    val inputFile = "/home/michalis/IdeaProjects/DWS102-Spark-Project/datasets/4d_normal_data_10k.txt" // it will read it from args
     val samplingRate = 0.1
     val spark = SparkSession.builder
       .appName("Skyline")
