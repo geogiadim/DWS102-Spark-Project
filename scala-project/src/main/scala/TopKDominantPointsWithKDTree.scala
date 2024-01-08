@@ -11,18 +11,41 @@ object TopKDominantPointsWithKDTree {
     val sc = new SparkContext(conf)
 
     val data = sc.textFile("/home/michalis/IdeaProjects/DWS102-Spark-Project/datasets/3d_uniform_data.txt")
-    val points = data.map(_.split("\\t").map(_.toDouble)).collect()
-    val k = 10 // return tok k points to find
+    val pointsRDD = data.map(_.split("\\t").map(_.toDouble))
 
-    val root = buildKDTree(points, depth = 0)
+    // top k points
+    val k = 10
 
-    val topKQueue = findDominantPoints(points, root, k)
+    // build local KD-Trees in each partition and collect them
+    val partitionedTrees = pointsRDD.mapPartitions { partition =>
+      if (partition.isEmpty) Iterator.empty
+      else {
+        val points = partition.toArray
+        val localTree = buildKDTree(points, 0)
+        Iterator(localTree)
+      }
+    }.collect()
 
-    // sort by score in descending order
-    val sortedTopK = topKQueue.toList.sortBy(-_._2)
+    // broadcast the array of local KD-Trees
+    val broadcastedTrees = sc.broadcast(partitionedTrees)
 
-    sortedTopK.foreach { case (point, score) =>
-      println(point.mkString(", ") + " with score: " + score)
+    // score points (parallel)
+    val scoredPoints = pointsRDD.flatMap { point =>
+      broadcastedTrees.value.map { localTree =>
+        var score = 0
+        traverseAndScore(localTree, point, (otherPoint: Array[Double]) => {
+          if (isDominated(point, otherPoint)) score += 1
+        })
+        (point.mkString(","), score)
+      }
+    }.reduceByKey(_ + _)
+
+    // aggregate scores and find top k points
+    val aggregatedScores = scoredPoints.reduceByKey(_ + _)
+    val topKPoints = aggregatedScores.takeOrdered(k)(Ordering.by[(String, Int), Int](_._2).reverse)
+
+    topKPoints.foreach { case (pointString, score) =>
+      println(pointString + " with score: " + score)
     }
 
     sc.stop()
@@ -41,24 +64,6 @@ object TopKDominantPointsWithKDTree {
     node.right = buildKDTree(sortedPoints.slice(medianIndex + 1, sortedPoints.length), depth + 1)
 
     node
-  }
-
-  def findDominantPoints(allPoints: Array[Array[Double]], node: KDTreeNode, k: Int, depth: Int = 0): PriorityQueue[(Array[Double], Int)] = {
-    val queue = PriorityQueue.empty[(Array[Double], Int)](Ordering.by(-_._2))
-
-    allPoints.foreach { point =>
-      var score = 0
-      traverseAndScore(node, point, (otherPoint: Array[Double]) => {
-        if (isDominated(point, otherPoint)) score += 1
-      })
-      queue.enqueue((point, score))
-
-      if (queue.size > k) {
-        queue.dequeue()
-      }
-    }
-
-    queue
   }
 
   def traverseAndScore(node: KDTreeNode, point: Array[Double], action: Array[Double] => Unit): Unit = {
