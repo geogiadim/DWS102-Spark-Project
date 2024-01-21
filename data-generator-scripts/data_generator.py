@@ -31,42 +31,44 @@ class DataGenerator:
         df = pd.DataFrame(data)
         df.to_csv(filename, sep='\t', index=False, header=False)
 
+
+num_points = 100000
 # 2d data
-generator = DataGenerator(2, "normal", 1000)
+generator = DataGenerator(2, "normal", num_points)
 generator.export_data('datasets/normal_data.txt')
 
-generator = DataGenerator(2, "correlated", 1000)
+generator = DataGenerator(2, "correlated", num_points)
 generator.export_data('datasets/correlated_data.txt')
 
-generator = DataGenerator(2, "anticorrelated", 1000)
+generator = DataGenerator(2, "anticorrelated", num_points)
 generator.export_data('datasets/anticorrelated_data.txt')
 
-generator = DataGenerator(2, "uniform", 1000)
+generator = DataGenerator(2, "uniform", num_points)
 generator.export_data('datasets/uniform_data.txt')
 
 
 # 3d data
-generator = DataGenerator(3, "normal", 1000)
-generator.export_data('datasets/3d_normal_data.txt')
+# generator = DataGenerator(3, "normal", 1000)
+# generator.export_data('datasets/3d_normal_data.txt')
 
-generator = DataGenerator(3, "correlated", 1000)
-generator.export_data('datasets/3d_correlated_data.txt')
+# generator = DataGenerator(3, "correlated", 1000)
+# generator.export_data('datasets/3d_correlated_data.txt')
 
-generator = DataGenerator(3, "anticorrelated", 1000)
-generator.export_data('datasets/3d_anticorrelated_data.txt')
+# generator = DataGenerator(3, "anticorrelated", 1000)
+# generator.export_data('datasets/3d_anticorrelated_data.txt')
 
-generator = DataGenerator(3, "uniform", 1000)
-generator.export_data('datasets/3d_uniform_data.txt')
+# generator = DataGenerator(3, "uniform", 1000)
+# generator.export_data('datasets/3d_uniform_data.txt')
 
 # 4d data
-generator = DataGenerator(4, "normal", 1000)
+generator = DataGenerator(4, "normal", num_points)
 generator.export_data('datasets/4d_normal_data.txt')
 
-generator = DataGenerator(4, "correlated", 1000)
+generator = DataGenerator(4, "correlated", num_points)
 generator.export_data('datasets/4d_correlated_data.txt')
 
-generator = DataGenerator(4, "anticorrelated", 1000)
+generator = DataGenerator(4, "anticorrelated", num_points)
 generator.export_data('datasets/4d_anticorrelated_data.txt')
 
-generator = DataGenerator(4, "uniform", 1000)
+generator = DataGenerator(4, "uniform", num_points)
 generator.export_data('datasets/4d_uniform_data.txt')
