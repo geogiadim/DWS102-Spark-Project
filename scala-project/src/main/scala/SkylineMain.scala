@@ -2,8 +2,7 @@ import org.apache.spark.sql.SparkSession
 
 object SkylineMain {
   def main(args: Array[String]): Unit = {
-    val inputFile = "file:///home/ggian/Documents/00.code/DWS102-Spark-Project/datasets/4d_uniform_data.txt" // it will read it from args
-    val samplingRate = 0.1
+    val inputFile = "file:///home/ggian/Documents/00.code/DWS-Projects/DWS102-Spark-Project/datasets/anticorrelated_data.txt" // it will read it from args
     val spark = SparkSession.builder
       .appName("Skyline")
       .master("local[*]")
@@ -17,15 +16,19 @@ object SkylineMain {
     val sc = spark.sparkContext
 
     val startTime = System.nanoTime
-    val algorithm = "als" // it will read it from args
-
+    val algorithm = "baselineSkyline" // it will read it from args
+//    val algorithm = "kdTreeSkyline" // it will read it from args
+//    val algorithm = "distributedKDTreeSkyline" // it will read it from args
 
     algorithm match {
-      case "als" => new BaselineSkyline(inputFile, sc, samplingRate)
+      case "baselineSkyline" => new BaselineSkyline(inputFile, sc)
+      case "kdTreeSkyline" => new DistributedKDTreeSkyline(inputFile, sc)
       case _ => println("Please provide a valid algorithm name.")
     }
 
     val endTime = System.nanoTime - startTime
     println("Total duration of application is: " + endTime.asInstanceOf[Double] / 1000000000.0 + "second(s)")
+
+    sc.stop()
   }
 }

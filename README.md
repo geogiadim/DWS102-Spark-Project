@@ -84,6 +84,7 @@ You will find the generated JAR file in ```scala-project/target/scala-2.12/```
 
 
 !!!Notes
+https://phoenixnap.com/kb/install-spark-on-ubuntu
 start-master.sh --properties-file /conf/spark-custom.conf
 ps aux | grep spark
 start-master.sh

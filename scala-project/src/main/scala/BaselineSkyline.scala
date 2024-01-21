@@ -9,33 +9,32 @@ import org.apache.spark.storage.StorageLevel
  * This implementation is not appropriate for big datafiles as well as it calculates the local skylines comparing all to all data points.
  * Moreover, for big datafiles collecting all local skylines may cause main memory overflow.
  **/
-class BaselineSkyline(inputPath: String, sc: SparkContext, samplingRate: Double) extends Serializable {
+class BaselineSkyline(inputPath: String, sc: SparkContext) extends Serializable {
   private val inputTime = System.nanoTime
   private val initialDataRDD = sc.textFile(inputPath)
 
   println("Number of INITIAL DATA RDD partitions: " + initialDataRDD.getNumPartitions)
 
   private val localSkylinesRDD = initialDataRDD.map(x=>x.split("\t"))
-                .map(x => x.map(y => y.toDouble))
-                .mapPartitions(SFSSkylineCalculation.addScoreAndCalculate)
+                                            .map(x => x.map(y => y.toDouble))
+                                            .mapPartitions(SFSSkyline.calculate)
 
   println("Number of LOCAL SKYLINES RDD partitions: " + localSkylinesRDD.getNumPartitions)
   println("Number of initial data points: " + initialDataRDD.count())
   println("Number of local skylines: " + localSkylinesRDD.count())
   localSkylinesRDD.persist(StorageLevel.MEMORY_AND_DISK)
-  // localSkylinesRDD.collect().foreach(localSkyline => println(localSkyline.mkString(" ")))
 
   // Use mapPartitionsWithIndex to print each line along with its partition index
-  localSkylinesRDD.mapPartitionsWithIndex { (index, iterator) =>
-    iterator.map(localSkyline => s"Partition $index: ${localSkyline.mkString(" ")}")
-  }.collect().foreach(println)
+//  localSkylinesRDD.mapPartitionsWithIndex { (index, iterator) =>
+//    iterator.map(localSkyline => s"Partition $index: ${localSkyline.mkString(" ")}")
+//  }.collect().foreach(println)
 
   private val localSkylinesTime = System.nanoTime()
   println("Local skyline points were calculated and retrieved in: "+(localSkylinesTime-inputTime).asInstanceOf[Double] / 1000000000.0 +" second(s)")
 
   // Assume that localSkylines fit in driver's main memory
-  private val mainMemorySkyline = SkylineCalculation.calculate(localSkylinesRDD.collect().toIterator).toList
-  println("Skyline completed. Total skylines: " + mainMemorySkyline.length)
+  private val mainMemorySkyline = SFSSkyline.calculate(localSkylinesRDD.collect().toIterator).toList
+//  println("Skyline completed. Total skylines: " + mainMemorySkyline.length)
   mainMemorySkyline.foreach(skyline => println(skyline.mkString(" ")))
 
   println("Global skyline points were calculated in: "+(System.nanoTime-localSkylinesTime).asInstanceOf[Double] / 1000000000.0 +" second(s)")
