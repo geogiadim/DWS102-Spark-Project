@@ -2,7 +2,8 @@ import org.apache.spark.sql.SparkSession
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val inputFile = "file:///home/ggian/Documents/00.code/DWS-Projects/DWS102-Spark-Project/datasets/test.txt" // it will read it from args
+//    val inputFile = "file:///home/ggian/Documents/00.code/DWS-Projects/DWS102-Spark-Project/datasets/test.txt" // it will read it from args
+    val inputFile = "file:///home/michalis/IdeaProjects/DWS102-Spark-Project/datasets/4d_normal_data_1m.txt" // it will read it from args
     val spark = SparkSession.builder
       .appName("Dominance-based Queries")
       .master("local[*]")
@@ -20,7 +21,7 @@ object Main {
 //    val algorithm = "kdTreeSkyline" // it will read it from args
 
 //    val algorithm = "baselineTopK" // it will read it from args
-    val algorithm = "kdTreeTopK" // it will read it from args
+    val algorithm = "kdTreeTopKSkyline" // it will read it from args
 
     val k = 10
     algorithm match {
@@ -28,6 +29,7 @@ object Main {
       case "kdTreeSkyline" => new DistributedKDTreeSkyline(inputFile, sc)
       case "baselineTopK" => new BaselineTopKDominantPoints(inputFile, sc, k)
       case "kdTreeTopK" => new KDTreeTopKDominantPoints(inputFile, sc, k)
+      case "kdTreeTopKSkyline" => new KDTreeTopKSkyline(inputFile, sc, k)
       case _ => println("Please provide a valid algorithm name.")
     }
 
