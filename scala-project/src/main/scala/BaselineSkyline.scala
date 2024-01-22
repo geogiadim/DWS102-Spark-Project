@@ -34,8 +34,8 @@ class BaselineSkyline(inputPath: String, sc: SparkContext) extends Serializable 
 
   // Assume that localSkylines fit in driver's main memory
   private val mainMemorySkyline = SFSSkyline.calculate(localSkylinesRDD.collect().toIterator).toList
-//  println("Skyline completed. Total skylines: " + mainMemorySkyline.length)
-  mainMemorySkyline.foreach(skyline => println(skyline.mkString(" ")))
+  println("Skyline completed. Total skylines: " + mainMemorySkyline.length)
+//  mainMemorySkyline.foreach(skyline => println(skyline.mkString(" ")))
 
   println("Global skyline points were calculated in: "+(System.nanoTime-localSkylinesTime).asInstanceOf[Double] / 1000000000.0 +" second(s)")
 }
