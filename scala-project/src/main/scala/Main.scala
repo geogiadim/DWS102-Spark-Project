@@ -9,7 +9,8 @@ object Main {
     val file = new File(outputPath)
     val writer = new BufferedWriter(new FileWriter(file))
 
-    val inputFile = "file:///home/ggian/Documents/00.code/DWS-Projects/DWS102-Spark-Project/datasets/uniform_data.txt" // it will read it from args
+    val providedPath = "/home/ggian/Documents/00.code/DWS-Projects/DWS102-Spark-Project/datasets/test.txt"
+    val inputFile = "file://"+providedPath // it will read it from args
     val spark = SparkSession.builder
       .appName("Dominance-based Queries")
       .master("local[*]")
@@ -30,7 +31,7 @@ object Main {
       writer.write("#####################\n")
 
       val startTime = System.nanoTime
-      val k = 10
+      val k = 10 // it will read it from args
 
       // Skyline
       writer.write("\n##### Skyline Query #####\n")
@@ -65,6 +66,7 @@ object Main {
       results.foreach { case (point, score) =>
         writer.write(s"Point: ${point.mkString(", ")}, Score: $score\n")
       }
+      writer.write("#####################\n")
 
 
       val endTime = System.nanoTime - startTime
