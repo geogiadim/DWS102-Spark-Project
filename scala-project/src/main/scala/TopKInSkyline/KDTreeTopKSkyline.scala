@@ -41,21 +41,3 @@ class KDTreeTopKSkyline(sc: SparkContext, initialDataRDD: RDD[Array[Double]]) ex
     topKSkylinePoints
   }
 }
-
-//    val scoredSkylinePoints2 = globalSkyline.flatMap { skylinePoint =>
-//      broadcastedTrees.value.map { localTree =>
-//        var score = 0
-//        KDTree.traverseAndScore(localTree, skylinePoint, (otherPoint: Array[Double]) => {
-//          if (BasicSkyline.isDominated(skylinePoint, otherPoint)) score += 1
-//        })
-//        (skylinePoint, score)
-//      }
-//    }.groupBy(_._1).mapValues(_.map(_._2).sum)
-//
-//    val topSkylinePoint: Array[Double] = scoredSkylinePoints2.toList.sortBy(-_._2).head._1
-//    topSkylinePoint
-
-//    topKSkylinePoints.foreach { case (pointString, score) =>
-//      println(pointString + " with score: " + score)
-//    }
-//
