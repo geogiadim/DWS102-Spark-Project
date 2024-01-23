@@ -1,5 +1,7 @@
+package Skyline
+
+import Skyline.BasicSkyline.isDominated
 import scala.collection.mutable.ArrayBuffer
-import BasicSkyline.isDominated
 
 object SFSSkyline extends Serializable {
   def calculate(data: Iterator[Array[Double]]): Iterator[Array[Double]] = {

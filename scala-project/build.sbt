@@ -1,4 +1,4 @@
-name := "SparkWordCount"
+name := "Dominance-BasedQueries"
 
 version := "1.0"
 

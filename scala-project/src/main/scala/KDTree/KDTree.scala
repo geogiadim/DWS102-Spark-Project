@@ -1,3 +1,5 @@
+package KDTree
+
 object KDTree {
   /**
    * Represents a node in the KD-tree.
@@ -30,5 +32,12 @@ object KDTree {
     node.right = buildKDTree(sortedPoints.slice(medianIndex + 1, sortedPoints.length), depth + 1)
 
     node
+  }
+
+  def traverseAndScore(node: KDTree.KDTreeNode, point: Array[Double], action: Array[Double] => Unit): Unit = {
+    if (node == null) return
+    action(node.point)
+    traverseAndScore(node.left, point, action)
+    traverseAndScore(node.right, point, action)
   }
 }

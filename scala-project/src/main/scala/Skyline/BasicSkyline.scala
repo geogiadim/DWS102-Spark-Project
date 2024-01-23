@@ -1,3 +1,5 @@
+package Skyline
+
 object BasicSkyline extends Serializable {
   def calculate(x: Iterator[Array[Double]]): Iterator[Array[Double]] = {
     val data_points = x.toList

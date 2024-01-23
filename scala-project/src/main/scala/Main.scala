@@ -1,8 +1,15 @@
+import Skyline.DistributedKDTreeSkyline
+import TopKQuery.STDQuery
 import org.apache.spark.sql.SparkSession
+import java.io.{BufferedWriter, File, FileWriter}
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val inputFile = "file:///home/ggian/Documents/00.code/DWS-Projects/DWS102-Spark-Project/datasets/test.txt" // it will read it from args
+    val outputPath = "/home/ggian/log.txt"
+    val file = new File(outputPath)
+    val writer = new BufferedWriter(new FileWriter(file))
+
+    val inputFile = "file:///home/ggian/Documents/00.code/DWS-Projects/DWS102-Spark-Project/datasets/uniform_data.txt" // it will read it from args
     val spark = SparkSession.builder
       .appName("Dominance-based Queries")
       .master("local[*]")
@@ -14,31 +21,61 @@ object Main {
       .getOrCreate()
 
     val sc = spark.sparkContext
+    val initialDataRDD = sc.textFile(inputFile).map(_.split("\\t").map(_.toDouble))
+    try {
+      writer.write("#####################\n")
+      writer.write("#####################\n")
+      writer.write("Number of INITIAL DATA RDD partitions: " + initialDataRDD.getNumPartitions +"\n")
+      writer.write("#####################\n")
+      writer.write("#####################\n")
 
-    val startTime = System.nanoTime
-//    val algorithm = "baselineSkyline" // it will read it from args
-//    val algorithm = "kdTreeSkyline" // it will read it from args
+      val startTime = System.nanoTime
+      val k = 10
 
-//    val algorithm = "baselineTopK" // it will read it from args
-    val algorithm = "kdTreeTopK" // it will read it from args
+      // Skyline
+      writer.write("\n##### Skyline Query #####\n")
+      val skylineTime = System.nanoTime
+      val distributedKDTreeSkyline = new DistributedKDTreeSkyline()
+      val globalSkyline = distributedKDTreeSkyline.calculate(initialDataRDD)
+      writer.write("Skyline points were calculated in: "+(System.nanoTime-skylineTime).asInstanceOf[Double] / 1000000000.0 +" second(s)\n")
+      writer.write("Skyline completed. Total skylines: " + globalSkyline.length +"\n\n")
+      globalSkyline.foreach { point =>
+        val output = point.mkString(", ")
+        writer.write(output+"\n")
+      }
+      writer.write("#####################\n")
 
-    val k = 10
-    algorithm match {
-      case "baselineSkyline" => new BaselineSkyline(inputFile, sc)
-      case "kdTreeSkyline" => new DistributedKDTreeSkyline(inputFile, sc)
-      case "baselineTopK" => new BaselineTopKDominantPoints(inputFile, sc, k)
-      case "kdTreeTopK" => new KDTreeTopKDominantPoints(inputFile, sc, k)
-      case _ => println("Please provide a valid algorithm name.")
+      // top-k query
+      writer.write("\n##### Top-K Dominating Points Query #####\n")
+      val topKTime = System.nanoTime
+      val topkQuery = new STDQuery(sc, initialDataRDD)
+      val topKPoints = topkQuery.calculate(globalSkyline, k)
+      writer.write("Top "+k+" dominating points were calculated in: "+(System.nanoTime-topKTime).asInstanceOf[Double] / 1000000000.0 +" second(s)\n\n")
+      topKPoints.foreach { case (point, score) =>
+        writer.write(s"Point: ${point.mkString(", ")}, Score: $score\n")
+      }
+      writer.write("#####################\n")
+
+      // top-k in skyline
+      writer.write("\n##### Top-K Dominating Points in Skyline Query #####\n")
+      val topKInSkylineTime = System.nanoTime
+      val topKInSkyline = new TopKInSkyline.KDTreeTopKSkyline(sc, initialDataRDD)
+      val results = topKInSkyline.calculate(globalSkyline, k)
+      writer.write("Top "+k+" dominating points in Skyline were calculated in: "+(System.nanoTime-topKInSkylineTime).asInstanceOf[Double] / 1000000000.0 +" second(s)\n\n")
+      results.foreach { case (point, score) =>
+        writer.write(s"Point: ${point.mkString(", ")}, Score: $score\n")
+      }
+
+
+      val endTime = System.nanoTime - startTime
+      writer.write("\n#####################")
+      writer.write("\n#####################")
+      writer.write("\nTotal duration of application is: " + endTime.asInstanceOf[Double] / 1000000000.0 + "second(s)")
+      writer.write("\n#####################")
+      writer.write("\n#####################")
+    } finally {
+      writer.close()
     }
-
-    // this is how you can trigger the skyline class and get the results
-//    val distributedKDTreeSkyline = new DistributedKDTreeSkyline(inputFile, sc)
-//    val globalSkyline = distributedKDTreeSkyline.mainMemorySkyline
-//    globalSkyline.foreach(point => println(point.mkString(", ")))
-
-    val endTime = System.nanoTime - startTime
-    println("Total duration of application is: " + endTime.asInstanceOf[Double] / 1000000000.0 + "second(s)")
-
     sc.stop()
   }
 }
